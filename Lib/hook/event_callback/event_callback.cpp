@@ -77,6 +77,7 @@ CGEventRef eventCallback(CGEventTapProxy proxy,
             bool shouldReplace = askUserConfirm();
 
             if (shouldReplace && !inputBuffer.empty()) {
+                const auto originalLength = inputBuffer.length();
                 std::string prompt = utf16_to_utf8(inputBuffer);
                 inputBuffer.clear(); // Clear before GPT call
                 std::string reply = ask_chatgpt(prompt, "입력한 문장을 자연스럽게 다듬어, 쉼표로 구분된 3가지 버전(첫번째, 두번째, 세번째)만 제안하세요. 각 문장만 쉼표로 구분해서 출력하고, 설명이나 안내, 추가 멘트는 절대 포함하지 마세요.");
@@ -110,7 +111,7 @@ CGEventRef eventCallback(CGEventTapProxy proxy,
 
                 if (!chosen.empty()) {
                     // Delete previously typed input with backspace
-                    for (size_t i = 0; i < inputBuffer.size(); ++i) {
+                    for (size_t i = 0; i < originalLength; ++i) {
                         CGEventRef backspaceDown = CGEventCreateKeyboardEvent(NULL, KEY_BACKSPACE, true);
                         CGEventRef backspaceUp = CGEventCreateKeyboardEvent(NULL, KEY_BACKSPACE, false);
                         CGEventPost(kCGHIDEventTap, backspaceDown);
