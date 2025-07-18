@@ -14,7 +14,6 @@ CXXFLAGS   := -std=c++17 -Wall \
                -ILib/hook/post_event \
                -ILib/hook \
                -ILib/API
-LDFLAGS    := -framework ApplicationServices -lcurl
 
 SRC_DIR    := src
 LIB_DIR    := Lib
@@ -24,10 +23,13 @@ OUT_DIR    := Output
 
 TARGET     := keyhook
 
+# 프레임워크와 라이브러리 링크 옵션을 LDFLAGS로 분리
+LDFLAGS    := -framework ApplicationServices -framework Carbon -lcurl
+
 # main.cpp
 SRCS       := $(wildcard $(SRC_DIR)/*.cpp)
 # Lib/hook/*/*.cpp 전부 + Lib/API/*.cpp 전부
-LIB_SRCS   := $(wildcard $(LIB_DIR)/hook/*/*.cpp) $(wildcard Lib/API/*.cpp)
+LIB_SRCS   := $(wildcard $(LIB_DIR)/hook/**/*.cpp) $(wildcard Lib/API/*.cpp)
 
 # 객체 파일 경로
 SRCS_OBJ   := $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SRCS))
