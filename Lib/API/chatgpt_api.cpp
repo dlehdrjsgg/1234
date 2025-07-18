@@ -4,7 +4,6 @@
 #include <curl/curl.h>
 #include "json.hpp"
 using json = nlohmann::json;
-#include <cstdlib>
 
 static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) {
     ((std::string*)userp)->append((char*)contents, size * nmemb);
@@ -12,29 +11,7 @@ static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* use
 }
 
 std::string ask_chatgpt(const std::string& prompt, const std::string& extra) {
-    std::string api_key;
-    // 1. 환경변수에서 OPENAI_KEY를 우선 시도
-    const char* env_key = std::getenv("OPENAI_KEY");
-    if (env_key) {
-        api_key = env_key;
-    } else {
-        // 2. .env 파일에서 직접 읽기
-        std::ifstream env_file(".env");
-        if (env_file.is_open()) {
-            std::string line;
-            while (std::getline(env_file, line)) {
-                if (line.find("OPENAI_KEY=") == 0) {
-                    api_key = line.substr(std::string("OPENAI_KEY=").length());
-                    break;
-                }
-            }
-            env_file.close();
-        }
-    }
-    if (api_key.empty()) {
-        return "OPENAI_KEY를 환경변수나 .env 파일에서 찾을 수 없습니다.";
-    }
-
+    std::string api_key = "";
     CURL* curl = curl_easy_init();
     if (!curl) return "CURL 초기화 실패";
 

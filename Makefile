@@ -1,5 +1,10 @@
 # Makefile
 
+# .env 파일이 있으면 포함하고, 변수들을 export 합니다.
+# 파일이 없어도 오류를 발생시키지 않습니다.
+-include .env
+export
+
 CXX        := clang++
 CXXFLAGS   := -std=c++17 -Wall \
                -Isrc \
@@ -56,10 +61,3 @@ $(BUILD_DIR)/API/%.o: Lib/API/%.cpp
 
 clean:
 	rm -rf $(BUILD_DIR) $(OUT_DIR)
-
-ifneq (,$(wildcard .env))
-	include .env
-	export
-else
-	$(warning .env 파일이 없습니다. OPENAI_KEY 등 환경 변수를 직접 설정해야 합니다.)
-endif
